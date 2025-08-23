@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @State var viewModel = LoginViewViewModel()
@@ -51,6 +52,22 @@ struct LoginView: View {
                     .opacity(viewModel.readyForSignIn ? 1.0 : 0.6)
                 }
                 .disabled(!viewModel.readyForSignIn)
+                
+                SignInWithAppleButton(.signIn) { request in
+                    request.requestedScopes = [.email, .fullName]
+                    viewModel.generateNonce()
+                    request.nonce = viewModel.hashedNonce
+                } onCompletion: { result in
+                    switch result{
+                    case .success(let authorization):
+                        viewModel.loginWithFirebase(authorization)
+                    case .failure(_):
+                        break
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 
             }
             .padding()

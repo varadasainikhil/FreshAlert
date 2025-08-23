@@ -5,6 +5,7 @@
 //  Created by Sai Nikhil Varada on 8/21/25.
 //
 
+import AuthenticationServices
 import SwiftUI
 
 struct SignUpView: View {
@@ -12,6 +13,8 @@ struct SignUpView: View {
     var body: some View {
         NavigationStack{
             VStack{
+                
+                Spacer()
                 
                 Spacer()
                 
@@ -87,6 +90,24 @@ struct SignUpView: View {
                         Text("Passwords Match")
                     }
                 }
+                
+                Spacer()
+                
+                SignInWithAppleButton(.signIn){ request in
+                    request.requestedScopes = [.email, .fullName]
+                    viewModel.generateNonce()
+                    request.nonce = viewModel.hashedNonce
+                } onCompletion: { result in
+                    switch result {
+                    case .success(let authorization):
+                        viewModel.loginWithFirebase(authorization)
+                    case .failure(_):
+                        break
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 Spacer()
                 
