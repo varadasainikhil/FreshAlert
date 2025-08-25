@@ -5,8 +5,7 @@
 //  Created by Sai Nikhil Varada on 8/22/25.
 //
 
-// TODO: 1b. Add apple sign in.
-// TODO: 1c. Add a small or inbetween the sign in and the sign in with apple button.
+
 // TODO: 2. Add Basic CRUD operations for the items.
 // TODO: 3. Make the items swiftdata compliant.
 // TODO: 4. Make the items cloudkit compliant.

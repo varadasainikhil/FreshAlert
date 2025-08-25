@@ -13,6 +13,8 @@ struct LoginView: View {
     var body: some View {
         NavigationStack{
             VStack{
+                Spacer()
+                
                 ZStack{
                     RoundedRectangle(cornerRadius: 12)
                         .strokeBorder(lineWidth: 2)
@@ -33,6 +35,8 @@ struct LoginView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 
+
+                
                 Button{
                     // Sign up
                     Task{
@@ -52,6 +56,20 @@ struct LoginView: View {
                     .opacity(viewModel.readyForSignIn ? 1.0 : 0.6)
                 }
                 .disabled(!viewModel.readyForSignIn)
+                .padding(.top, 30)
+                
+                
+                ZStack{
+                    Divider()
+                    Text("or")
+                        .frame(width: 30)
+                        .background(.white)
+                        .foregroundStyle(.gray)
+                        .font(.footnote)
+                }
+                .padding(.vertical, 20)
+                
+            
                 
                 SignInWithAppleButton(.signIn) { request in
                     request.requestedScopes = [.email, .fullName]
@@ -68,6 +86,9 @@ struct LoginView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+            
+                Spacer()
                 
             }
             .padding()

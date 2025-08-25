@@ -16,8 +16,6 @@ struct SignUpView: View {
                 
                 Spacer()
                 
-                Spacer()
-                
                 ZStack{
                     RoundedRectangle(cornerRadius: 12)
                         .strokeBorder(lineWidth: 2)
@@ -70,8 +68,6 @@ struct SignUpView: View {
                 }
                 .disabled(!viewModel.isButtonActive)
                 
-                
-                
                 Spacer()
                 
                 VStack(alignment: .leading){
@@ -89,6 +85,17 @@ struct SignUpView: View {
                         Image(systemName: viewModel.passwordsMatching ? "checkmark.circle" :"circle")
                         Text("Passwords Match")
                     }
+                }
+                
+                Spacer()
+                
+                ZStack{
+                    Divider()
+                    Text("or")
+                        .frame(width: 30)
+                        .background(.white)
+                        .foregroundStyle(.gray)
+                        .font(.footnote)
                 }
                 
                 Spacer()

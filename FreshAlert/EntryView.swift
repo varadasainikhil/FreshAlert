@@ -23,7 +23,6 @@ struct EntryView: View {
             viewModel.stopHandler()
         }
     }
-        
 }
 
 #Preview {
