@@ -5,7 +5,6 @@
 //  Created by Sai Nikhil Varada on 8/22/25.
 //
 
-
 // TODO: 2. Add Basic CRUD operations for the items.
 // TODO: 3. Make the items swiftdata compliant.
 // TODO: 4. Make the items cloudkit compliant.
