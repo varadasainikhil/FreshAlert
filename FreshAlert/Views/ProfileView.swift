@@ -1,19 +1,19 @@
 //
-//  ContentView.swift
+//  ProfileView.swift
 //  FreshAlert
 //
-//  Created by Sai Nikhil Varada on 8/21/25.
+//  Created by Sai Nikhil Varada on 8/25/25.
 //
 
 import SwiftUI
 
-struct ContentView: View {
-    @State var viewModel : SignUpViewViewModel
+struct ProfileView: View {
+    @State var authManager : SignUpViewViewModel
     var body: some View {
         VStack {
             Button{
                 Task{
-                    viewModel.signOut()
+                    authManager.signOut()
                 }
             } label: {
                 ZStack{
@@ -31,5 +31,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(viewModel: SignUpViewViewModel())
+    ProfileView(authManager: SignUpViewViewModel())
 }

@@ -14,7 +14,7 @@ struct EntryView: View {
         VStack{
             if viewModel.isLoggedIn && !viewModel.currentUserId.isEmpty{
                 // User is autheticated
-                ContentView(viewModel: authManager)
+                AuthenticatedView(authManager: authManager)
             } else {
                 SignUpView(viewModel: authManager)
             }
