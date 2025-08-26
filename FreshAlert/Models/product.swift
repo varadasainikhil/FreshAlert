@@ -10,16 +10,18 @@ import SwiftData
 
 @Model
 class Product{
-    var name : String
-    var productDescription : String
-    var dateAdded : Date
-    var expirationDate : Date
+    var barcode : String = ""
+    var name : String = ""
+    var productDescription : String = ""
+    var dateAdded : Date = Date.now
+    var expirationDate : Date = Date.now
     var productImage : Data?
     
-    init(name: String, productDescription: String, expirationDate: Date, productImage: Data? = nil) {
+    init(barcode: String , name: String, productDescription: String, expirationDate: Date, productImage: Data? = nil) {
+        self.barcode = barcode
         self.name = name
         self.productDescription = productDescription
-        self.dateAdded = Date.now
+        self.dateAdded = .now
         self.expirationDate = expirationDate
         self.productImage = productImage
     }

@@ -18,14 +18,16 @@ struct ProfileView: View {
             } label: {
                 ZStack{
                     RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(.green)
+                        .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 12))
+                    
                     Text("Sign Out")
                         .foregroundStyle(.white)
+                        .fontWeight(.medium)
                 }
-                
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
-            }        }
+            }
+            
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)        }
         .padding()
     }
 }

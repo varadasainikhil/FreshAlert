@@ -8,8 +8,36 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State var showingAddProduct : Bool = false
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            VStack{
+                
+                Spacer()
+                HStack{
+                    Spacer()
+                    Button {
+                        // show the add product view as a sheet
+                        showingAddProduct = true
+                    } label: {
+                        ZStack{
+                            Circle()
+                                .glassEffect(in: .circle)
+                            
+                            Image(systemName: "plus")
+                                .font(.title.bold())
+                                .foregroundStyle(.white)
+                            
+                        }
+                        .frame(width: 40)
+                    }
+                }
+            }
+        }
+        .padding()
+        .sheet(isPresented: $showingAddProduct) {
+            AddProductView()
+        }
     }
 }
 

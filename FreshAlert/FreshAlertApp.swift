@@ -5,6 +5,7 @@
 //  Created by Sai Nikhil Varada on 8/21/25.
 //
 import FirebaseCore
+import SwiftData
 import SwiftUI
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -25,5 +26,6 @@ struct FreshAlertApp: App {
         WindowGroup {
             EntryView()
         }
+        .modelContainer(for: Product.self)
     }
 }

@@ -15,27 +15,9 @@ struct LoginView: View {
             VStack{
                 Spacer()
                 
-                ZStack{
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(lineWidth: 2)
-                    TextField("Enter your Email", text: $viewModel.emailAddress)
-                        .padding(.horizontal)
-                        .textInputAutocapitalization(.never)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
+                CustomTextField(textToShow: "Enter your email", variableToBind: $viewModel.emailAddress)
                 
-                ZStack{
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(lineWidth: 2)
-                    SecureField("Enter your Password", text: $viewModel.password)
-                        .padding(.horizontal)
-                        .textInputAutocapitalization(.never)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
-                
-
+                CustomSecureField(textToShow: "Enter your password", variableToBind: $viewModel.password)
                 
                 Button{
                     // Sign up
@@ -46,6 +28,8 @@ struct LoginView: View {
                     ZStack{
                         RoundedRectangle(cornerRadius: 12)
                             .foregroundStyle(.green)
+                            .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 12))
+                            
                         Text("Sign In")
                             .foregroundStyle(.white)
                     }
