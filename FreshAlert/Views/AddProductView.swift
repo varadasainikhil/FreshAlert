@@ -43,10 +43,9 @@ struct AddProductView: View {
                     } label: {
                         Image(systemName: "checkmark")
                     }
-
+                    
                 }
             }
-            
         }
     }
 }

@@ -22,12 +22,9 @@ struct HomeView: View {
             ZStack{
                 ScrollViewReader{ proxy in
                     ScrollView{
-                        // create a card view that shows the product, then order it by expiration date
                         LazyVStack{
                             ForEach(groups){group in
                                 HStack{
-                                    // Change the date to the number of days left
-                                    // Also move the method for the number of days left from product to the groupProducts
                                     Text(group.daysTillExpiry().message)
                                     Spacer()
                                 }
