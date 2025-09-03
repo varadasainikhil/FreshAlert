@@ -39,8 +39,10 @@ struct AddProductView: View {
             .toolbar{
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        // dismiss the sheet
+                        // save the product and dismiss the sheet
+                        viewModel.createProduct(modelContext: modelContext)
                         dismiss()
+                        
                     } label: {
                         Image(systemName: "checkmark")
                     }
