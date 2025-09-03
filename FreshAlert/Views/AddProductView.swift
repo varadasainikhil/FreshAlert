@@ -17,13 +17,10 @@ struct AddProductView: View {
         NavigationStack{
             Form{
                 Section{
-                    
                     CustomTextFieldWithHeading(heading: "Barcode", textToShow: "Enter the Product Barcode", variabletoBind: $viewModel.barcode)
-                    
                 }
                 
                 Section{
-                    
                     CustomTextFieldWithHeading(heading: "Product Name", textToShow: "Enter the Product Name", variabletoBind: $viewModel.name)
                     
                     CustomTextFieldWithHeading(heading: "Description", textToShow: "Enter Product Description", variabletoBind: $viewModel.productDescription)

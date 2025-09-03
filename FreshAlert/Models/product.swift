@@ -11,6 +11,7 @@ import SwiftUI
 
 @Model
 class Product{
+    var id : String = UUID().uuidString
     var barcode : String = ""
     var name : String = ""
     var productDescription : String = ""
@@ -49,6 +50,13 @@ class Product{
         self.productImage = productImage
     }
     
+    
+    func markUsed() {
+        withAnimation {
+            self.isUsed = true
+        }
+    }
+    
     // Calculate the days left for expiry
     func daysTillExpiry() -> (message : String, count : Int){
         var textToShow = ""
@@ -68,12 +76,4 @@ class Product{
         }
         return (message : textToShow, count: daysTillExpiration)
     }
-    
-    func markUsed() {
-        withAnimation {
-            self.isUsed = true
-        }
-        
-    }
-    
 }

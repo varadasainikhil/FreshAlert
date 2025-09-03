@@ -5,9 +5,12 @@
 //  Created by Sai Nikhil Varada on 8/29/25.
 //
 
+import SwiftData
 import SwiftUI
 
 struct CardView: View {
+    @Environment(\.modelContext) var modelContext
+    @State private var viewModel = CardViewViewModel()
     var product : Product
     var body: some View {
         
@@ -39,14 +42,30 @@ struct CardView: View {
                     Spacer()
                     Spacer()
                     
-                    Button {
-                        // mark the product as used and completed
-                        product.markUsed()
-                    } label: {
-                        Image(systemName: product.isUsed ? "checkmark.circle.fill" : "checkmark.circle")
-                            .font(.title)
-                            .foregroundStyle(product.isUsed ? .green : .gray)
+                    if product.isExpired{
+                        Button {
+                            // delete the product
+                            withAnimation {
+                                viewModel.deleteProduct(modelContext: modelContext, product: product)
+                            }
+                        } label: {
+                            Image(systemName: "trash.circle")
+                                .font(.title)
+                                .foregroundStyle(product.isUsed ? .green : .black)
+                        }
                     }
+                    else {
+                        Button {
+                            // mark the product as used and completed
+                            product.markUsed()
+                        } label: {
+                            Image(systemName: product.isUsed ? "checkmark.circle.fill" : "checkmark.circle")
+                                .font(.title)
+                                .foregroundStyle(product.isUsed ? .green : .black)
+                        }
+                    }
+                    
+                    
                     
                 }
                 .padding(.horizontal)
@@ -61,5 +80,5 @@ struct CardView: View {
 }
 
 #Preview {
-    CardView(product: Product(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()))
+    CardView(product: Product(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()))
 }

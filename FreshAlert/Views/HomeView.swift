@@ -11,50 +11,71 @@ struct HomeView: View {
     @Environment(\.modelContext) var modelContext
     @State var showingAddProduct : Bool = false
     @Query(sort:\GroupedProducts.expirationDate) var groups : [GroupedProducts]
-
+    
     var body: some View {
-        ZStack{
-            ScrollView{
-                // create a card view that shows the product, then order it by expiration date
-                ForEach(groups){group in
-                    HStack{
-                        // Change the date to the number of days left
-                        // Also move the method for the number of days left from product to the groupProducts
-                        Text("\(group.expirationDate.formatted(date : .abbreviated, time: .omitted))")
-                        Spacer()
+        VStack(alignment:.leading){
+            Text("Your Products")
+                .font(.title.bold())
+                .padding(.leading)
+                .padding(.top)
+            
+            ZStack{
+                ScrollViewReader{ proxy in
+                    ScrollView{
+                        // create a card view that shows the product, then order it by expiration date
+                        LazyVStack{
+                            ForEach(groups){group in
+                                HStack{
+                                    // Change the date to the number of days left
+                                    // Also move the method for the number of days left from product to the groupProducts
+                                    Text(group.daysTillExpiry().message)
+                                    Spacer()
+                                }
+                                
+                                ForEach(group.products){ product in
+                                    if group.products.last == product {
+                                        CardView(product: product)
+                                            .padding(.bottom)
+                                    }
+                                    else {
+                                        CardView(product: product)
+                                    }
+                                }
+                            }
+                        }
+                        
                     }
-                    
-                    ForEach(group.products){ product in
-                        CardView(product: product)
-                    }
+                    .scrollContentBackground(.hidden)
                 }
-            }
-            .scrollContentBackground(.hidden)
-            
-            
-            VStack{
-                Spacer()
-                HStack{
+                
+                VStack{
                     Spacer()
-                    Button {
-                        // Show the sheet for the addProductView
-                        showingAddProduct = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .glassEffect()
+                    HStack{
+                        Spacer()
+                        Button {
+                            // Show the sheet for the addProductView
+                            showingAddProduct = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .glassEffect()
+                        }
                     }
                 }
+                
+            }
+            .padding()
+            .sheet(isPresented: $showingAddProduct) {
+                AddProductView()
             }
             
         }
-        .padding()
-        .sheet(isPresented: $showingAddProduct) {
-            AddProductView()
-        }
+        
     }
+    
 }
+
 
 #Preview {
     do {
@@ -88,7 +109,7 @@ struct HomeView: View {
         for group in sampleGroups {
             context.insert(group)
         }
-
+        
         
         return HomeView()
             .modelContainer(container)
