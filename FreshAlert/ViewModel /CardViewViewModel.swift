@@ -11,7 +11,7 @@ import SwiftData
 @Observable
 class CardViewViewModel{
     
-    func deleteProduct(modelContext : ModelContext, product : Product){
+    func deleteProduct(modelContext : ModelContext, product : Item){
         let targetDate = product.expirationDate
         let fetchDescriptor = FetchDescriptor<GroupedProducts>(predicate: #Predicate<GroupedProducts> { group in
             group.expirationDate == targetDate

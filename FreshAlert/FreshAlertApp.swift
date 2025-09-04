@@ -26,6 +26,6 @@ struct FreshAlertApp: App {
         WindowGroup {
             EntryView()
         }
-        .modelContainer(for: [GroupedProducts.self])
+        .modelContainer(for: [GroupedProducts.self, Item.self])
     }
 }

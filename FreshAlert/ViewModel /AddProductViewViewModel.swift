@@ -15,9 +15,18 @@ class AddProductViewViewModel {
     var productDescription : String = ""
     var expirationDate : Date = Date.now.addingTimeInterval(86400)
     var productImage : Data?
+    var isLoading : Bool = false
+    var errorMessage : String?
+    var searchSuccess : Bool = false
+    var isSearchButtonDisabled : Bool {
+        return barcode.isEmpty || isLoading
+    }
+    
+    // Usage
+    
     
     func createProduct(modelContext : ModelContext){
-        let newProduct = Product(barcode: barcode, name: name, productDescription: productDescription, expirationDate: expirationDate)
+        let newProduct = Item(barcode: barcode, name: name, productDescription: productDescription, expirationDate: expirationDate)
         
         // after creating a new product, we first have to check any other product with same expiration date, if there are other products, we have to add it to the same groupedProduct or else, we have to create a new one .
         
@@ -56,5 +65,119 @@ class AddProductViewViewModel {
         }
         
         print("Created a new product and inserted it in the modelContext.")
+    }
+    
+    func getAPIKey() -> String? {
+        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+              let plist = NSDictionary(contentsOfFile: path),
+              let apiKey = plist["API_KEY"] as? String else {
+            return nil
+        }
+        print(apiKey)
+        return apiKey
+    }
+    
+    func searchBarCode(barCode: String) async throws {
+        
+        // Reset state
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+            searchSuccess = false
+        }
+        
+        print("Searching for barcode: \(barCode)")
+        let apiKey = getAPIKey()
+        
+        // Validate API key
+        guard let validApiKey = apiKey, !validApiKey.isEmpty else {
+            print("❌ Error: API key is nil or empty")
+            await MainActor.run {
+                isLoading = false
+                errorMessage = "API key not configured"
+            }
+            return
+        }
+        
+        print("✅ API key retrieved successfully")
+        
+        guard var urlComponents = URLComponents(string: "https://api.barcodelookup.com/v3/products") else {
+            print("❌ Error: Failed to create URL components")
+            throw URLError(.badURL)
+        }
+        
+        let queryItems : [URLQueryItem] = [
+            URLQueryItem(name: "barcode", value: barCode),
+            URLQueryItem(name: "formatted", value: "y"),
+            URLQueryItem(name: "key", value: validApiKey)
+        ]
+        
+        urlComponents.queryItems = queryItems
+        
+        guard let url = urlComponents.url else {
+            print("❌ Error: Failed to create final URL")
+            throw URLError(.badURL)
+        }
+        
+        print("🌐 Making request to: \(url.absoluteString)")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            // Log response details
+            if let httpResponse = response as? HTTPURLResponse {
+                print("📡 Response status code: \(httpResponse.statusCode)")
+            }
+            
+            print("📦 Received data size: \(data.count) bytes")
+            
+            let decoder = JSONDecoder()
+            let apiResponse = try decoder.decode(Response.self, from: data)
+            
+            print("✅ Successfully decoded response")
+            print("📊 Number of products found: \(apiResponse.products.count)")
+            
+            if let firstProduct = apiResponse.products.first {
+                print("🏷️ First product title: \(firstProduct.title)")
+                await MainActor.run {
+                    self.name = firstProduct.title
+                    self.productDescription = firstProduct.description
+                    self.isLoading = false
+                    self.searchSuccess = true
+                    self.errorMessage = nil
+                }
+                
+            } else {
+                print("⚠️ No products found in response")
+                await MainActor.run {
+                    self.isLoading = false
+                    self.errorMessage = "No products found for this barcode"
+                }
+            }
+            
+        } catch let decodingError as DecodingError {
+            print("❌ JSON Decoding Error: \(decodingError)")
+            print("❌ Decoding Error Details: \(decodingError.localizedDescription)")
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Failed to parse product data"
+            }
+        } catch let urlError as URLError {
+            print("❌ Network Error: \(urlError)")
+            print("❌ Network Error Code: \(urlError.code.rawValue)")
+            print("❌ Network Error Description: \(urlError.localizedDescription)")
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Network error: \(urlError.localizedDescription)"
+            }
+        } catch {
+            print("❌ Unknown Error: \(error)")
+            print("❌ Error Type: \(type(of: error))")
+            print("❌ Error Description: \(error.localizedDescription)")
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Unexpected error: \(error.localizedDescription)"
+            }
+        }
     }
 }

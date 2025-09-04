@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 
 @Model
-class Product{
+class Item{
     var id : String = UUID().uuidString
     var barcode : String = ""
     var name : String = ""

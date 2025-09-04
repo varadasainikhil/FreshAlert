@@ -88,17 +88,17 @@ struct HomeView: View {
         
         let sampleGroups = [
             GroupedProducts(expirationDate: threeDaysFromNow, products: [
-                Product(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk", expirationDate: threeDaysFromNow),
-                Product(barcode: "987654321", name: "Bread", productDescription: "Whole wheat bread", expirationDate: threeDaysFromNow)
+                Item(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk", expirationDate: threeDaysFromNow),
+                Item(barcode: "987654321", name: "Bread", productDescription: "Whole wheat bread", expirationDate: threeDaysFromNow)
             ]),
             GroupedProducts(expirationDate: fiveDaysFromNow, products: [
-                Product(barcode: "456789123", name: "Eggs", productDescription: "Free-range eggs", expirationDate: fiveDaysFromNow),
-                Product(barcode: "789123456", name: "Yogurt", productDescription: "Greek yogurt", expirationDate: fiveDaysFromNow)
+                Item(barcode: "456789123", name: "Eggs", productDescription: "Free-range eggs", expirationDate: fiveDaysFromNow),
+                Item(barcode: "789123456", name: "Yogurt", productDescription: "Greek yogurt", expirationDate: fiveDaysFromNow)
             ]),
             GroupedProducts(expirationDate: twoDaysAgo, products: [
-                Product(barcode: "987654322", name: "Bread", productDescription: "Whole wheat bread", expirationDate: twoDaysAgo),
-                Product(barcode: "456789124", name: "Eggs", productDescription: "Free-range eggs", expirationDate: twoDaysAgo),
-                Product(barcode: "789123457", name: "Yogurt", productDescription: "Greek yogurt", expirationDate: twoDaysAgo)
+                Item(barcode: "987654322", name: "Bread", productDescription: "Whole wheat bread", expirationDate: twoDaysAgo),
+                Item(barcode: "456789124", name: "Eggs", productDescription: "Free-range eggs", expirationDate: twoDaysAgo),
+                Item(barcode: "789123457", name: "Yogurt", productDescription: "Greek yogurt", expirationDate: twoDaysAgo)
             ])
         ]
         

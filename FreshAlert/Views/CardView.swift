@@ -11,7 +11,7 @@ import SwiftUI
 struct CardView: View {
     @Environment(\.modelContext) var modelContext
     @State private var viewModel = CardViewViewModel()
-    var product : Product
+    var product : Item
     var body: some View {
         
         ZStack{
@@ -33,6 +33,7 @@ struct CardView: View {
                     VStack(alignment: .leading){
                         Text(product.name)
                             .font(.title3.bold())
+                            .lineLimit(2)
                         
                         Text(!product.productDescription.isEmpty ? product.productDescription : "")
                             .font(.subheadline)
@@ -80,5 +81,5 @@ struct CardView: View {
 }
 
 #Preview {
-    CardView(product: Product(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()))
+    CardView(product: Item(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()))
 }

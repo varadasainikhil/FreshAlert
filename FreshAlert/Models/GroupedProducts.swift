@@ -13,9 +13,9 @@ import SwiftUI
 class GroupedProducts{
     var id : String = UUID().uuidString
     var expirationDate : Date = Date.now
-    var products : [Product] = [Product]()
+    var products : [Item] = [Item]()
     
-    init(expirationDate: Date, products: [Product]) {
+    init(expirationDate: Date, products: [Item]) {
         self.expirationDate = expirationDate
         self.products = products
     }

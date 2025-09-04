@@ -17,7 +17,41 @@ struct AddProductView: View {
         NavigationStack{
             Form{
                 Section{
-                    CustomTextFieldWithHeading(heading: "Barcode", textToShow: "Enter the Product Barcode", variabletoBind: $viewModel.barcode)
+                    CustomTextFieldWithHeading(heading: "BarCode", textToShow: "Enter the product Barcode", variabletoBind: $viewModel.barcode)
+                    
+                    Button {
+                        // search for the product
+                        Task{
+                            try await viewModel.searchBarCode(barCode: viewModel.barcode)
+                        }
+                        
+                    } label: {
+                        HStack {
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("Searching...")
+                            } else {
+                                Text("Search")
+                            }
+                        }
+                    }
+                    .disabled(viewModel.isSearchButtonDisabled)
+                    
+                    // Show error message if exists
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
+                    
+                    // Show success message
+                    if viewModel.searchSuccess {
+                        Text("✅ Product found and loaded")
+                            .foregroundColor(.green)
+                            .font(.caption)
+                    }
+
                 }
                 
                 Section{
