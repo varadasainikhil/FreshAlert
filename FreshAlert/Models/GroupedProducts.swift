@@ -16,7 +16,8 @@ class GroupedProducts{
     var products : [Item] = [Item]()
     
     init(expirationDate: Date, products: [Item]) {
-        self.expirationDate = expirationDate
+        // Normalize the expiration date to start of day for consistent comparison
+        self.expirationDate = Calendar.current.startOfDay(for: expirationDate)
         self.products = products
     }
     

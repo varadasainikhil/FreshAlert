@@ -61,6 +61,13 @@ struct AddProductView: View {
                     
                     DatePicker("Enter the Expiration Date", selection: $viewModel.expirationDate, displayedComponents: [.date])
                         .datePickerStyle(.wheel)
+                    
+                    // Show error message for product creation if exists
+                    if let errorMessage = viewModel.errorMessage, !errorMessage.contains("API key") && !errorMessage.contains("Network") && !errorMessage.contains("products found") {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
                 }
                 .listRowSeparator(.hidden)
                 
@@ -71,8 +78,11 @@ struct AddProductView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         // save the product and dismiss the sheet
-                        viewModel.createProduct(modelContext: modelContext)
-                        dismiss()
+                        viewModel.createItem(modelContext: modelContext)
+                        // Only dismiss if no error occurred
+                        if viewModel.errorMessage == nil {
+                            dismiss()
+                        }
                         
                     } label: {
                         Image(systemName: "checkmark")

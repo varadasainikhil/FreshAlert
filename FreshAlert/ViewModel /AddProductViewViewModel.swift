@@ -14,7 +14,7 @@ class AddProductViewViewModel {
     var name : String = ""
     var productDescription : String = ""
     var expirationDate : Date = Date.now.addingTimeInterval(86400)
-    var productImage : Data?
+    var productImageLink : String?
     var isLoading : Bool = false
     var errorMessage : String?
     var searchSuccess : Bool = false
@@ -25,46 +25,45 @@ class AddProductViewViewModel {
     // Usage
     
     
-    func createProduct(modelContext : ModelContext){
-        let newProduct = Item(barcode: barcode, name: name, productDescription: productDescription, expirationDate: expirationDate)
-        
-        // after creating a new product, we first have to check any other product with same expiration date, if there are other products, we have to add it to the same groupedProduct or else, we have to create a new one .
+    func createItem(modelContext : ModelContext){
+        // Reset any previous error messages
+        errorMessage = nil
+        let newItem = Item(barcode: barcode, name: name, productDescription: productDescription, expirationDate: expirationDate, productImage: productImageLink)
+
+        print("Created a new Item")
         
         do {
-            // Use Calendar to compare dates by day instead of exact timestamp
-            let calendar = Calendar.current
-            let newProductDayStart = calendar.startOfDay(for: newProduct.expirationDate)
+            // Use normalized date for comparison
+            let normalizedDate = Calendar.current.startOfDay(for: newItem.expirationDate)
             
-            let descriptor = FetchDescriptor<GroupedProducts>()
-            
-            let allGroupedProducts = try modelContext.fetch(descriptor)
-            
-            // Filter manually by day since SwiftData predicates can't use Calendar operations
-            let foundGroupedProducts = allGroupedProducts.filter { groupedProduct in
-                calendar.startOfDay(for: groupedProduct.expirationDate) == newProductDayStart
+            // Use SwiftData predicate for more efficient querying
+            let predicate = #Predicate<GroupedProducts> { group in
+                group.expirationDate == normalizedDate
             }
             
-            // if we didnt find any groupedProducts, we create a new one
-            if foundGroupedProducts.isEmpty {
-                let newGroupedProducts = GroupedProducts(expirationDate: newProduct.expirationDate, products: [newProduct])
+            let descriptor = FetchDescriptor<GroupedProducts>(predicate: predicate)
+            let existingGroups = try modelContext.fetch(descriptor)
+            
+            // Check if we found any existing groups for this date
+            if let existingGroup = existingGroups.first {
+                // Add to existing group
+                existingGroup.products.append(newItem)
+                print("Found existing group for date, adding item to it")
+            } else {
+                // Create new group
+                let newGroupedProducts = GroupedProducts(expirationDate: normalizedDate, products: [newItem])
                 modelContext.insert(newGroupedProducts)
-                try modelContext.save()
-            }
-            // If there is a match, we just add it to the array of products
-            else {
-                guard let matchingGroupedProducts = foundGroupedProducts.first else {
-                    throw NSError(domain: "AddProductError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to unwrap grouped products"])
-                }
-                matchingGroupedProducts.products.append(newProduct)
-                try modelContext.save()
+                print("Created new group for date")
             }
             
+            // Single save operation
+            try modelContext.save()
+            print("Successfully saved item to database")
+            
+        } catch {
+            print("Error creating item: \(error.localizedDescription)")
+            errorMessage = "Failed to save product. Please try again."
         }
-        catch{
-            print(error.localizedDescription)
-        }
-        
-        print("Created a new product and inserted it in the modelContext.")
     }
     
     func getAPIKey() -> String? {
@@ -142,9 +141,11 @@ class AddProductViewViewModel {
                 await MainActor.run {
                     self.name = firstProduct.title
                     self.productDescription = firstProduct.description
+                    self.productImageLink = firstProduct.images.first
                     self.isLoading = false
                     self.searchSuccess = true
                     self.errorMessage = nil
+                
                 }
                 
             } else {
@@ -180,4 +181,5 @@ class AddProductViewViewModel {
             }
         }
     }
+    
 }

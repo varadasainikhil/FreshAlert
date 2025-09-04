@@ -17,7 +17,7 @@ class Item{
     var productDescription : String = ""
     var dateAdded : Date = Date.now
     var expirationDate : Date = Date.now
-    var productImage : Data?
+    var productImage : String?
     var isUsed : Bool = false
     
     var isExpired : Bool{
@@ -41,7 +41,7 @@ class Item{
         }
     }
     
-    init(barcode: String , name: String, productDescription: String, expirationDate: Date, productImage: Data? = nil) {
+    init(barcode: String , name: String, productDescription: String, expirationDate: Date, productImage: String? = nil) {
         self.barcode = barcode
         self.name = name
         self.productDescription = productDescription

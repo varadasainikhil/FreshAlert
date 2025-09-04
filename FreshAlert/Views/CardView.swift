@@ -19,14 +19,34 @@ struct CardView: View {
                 .foregroundStyle(product.borderColor)
                 .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 12))
             
-            
             VStack{
                 HStack{
-                    Image("placeholder")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 75, height: 75)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    if product.productImage != nil  {
+                        AsyncImage(url: URL(string: product.productImage ?? "no image")){phase in
+                        if let image = phase.image{
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 75, height: 75)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        else if phase.error != nil{
+                            Text("There was an error in loading the image")
+                        }
+                        else {
+                            ProgressView()
+                        }
+                    }
+                }
+                    else {
+                        Image("placeholder")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 75, height: 75)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    
+                    
                     
                     Spacer()
                     
@@ -81,5 +101,5 @@ struct CardView: View {
 }
 
 #Preview {
-    CardView(product: Item(barcode: "123456789", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()))
+    CardView(product: Item(barcode: "8410128750145", name: "Milk", productDescription: "Organic whole milk from the cows in the swiss", expirationDate: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()))
 }
